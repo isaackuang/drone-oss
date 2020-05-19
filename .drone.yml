@@ -6,7 +6,7 @@ steps:
   image: golang:1.14
   commands:
     - go env -w GO111MODULE="auto"
-    - git https://github.com/drone/drone.git
+    - git clone https://github.com/drone/drone.git
     - cd drone
     - git checkout $DRONE_TAG
     - go install -tags "oss nolimit" github.com/drone/drone/cmd/drone-server
