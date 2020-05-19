@@ -1,0 +1,23 @@
+kind: pipeline
+name: default
+
+steps:
+- name: build-binary
+  image: golang:1.14
+  commands:
+    - go env -w GO111MODULE="auto"
+    - git https://github.com/drone/drone.git
+    - cd drone
+    - git checkout $DRONE_TAG
+    - go install -tags "oss nolimit" github.com/drone/drone/cmd/drone-server
+    - mv /go/bin/drone-server ../.
+  when:
+    event: tag
+- name: publish
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: github_token
+    files: drone-server
+  when:
+    event: tag
